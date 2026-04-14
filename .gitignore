@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+.wrangler/
+
+# Environment
+.dev.vars
+.env
+.env.*
+*.local
+.cloudflare.env
+
+# IDE
+.DS_Store
+.cursor/
+.idea/
+
+# Test coverage
+coverage/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+Thumbs.db

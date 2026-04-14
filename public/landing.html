@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TokenRouter - AI Token as Commodity</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --secondary: #0ea5e9;
+      --accent: #8b5cf6;
+      --dark: #0f172a;
+      --darker: #020617;
+      --light: #f8fafc;
+      --gray: #64748b;
+      --success: #10b981;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--darker);
+      color: var(--light);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(2, 6, 23, 0.8);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--gray);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: white; }
+
+    .btn {
+      padding: 0.625rem 1.25rem;
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(99, 102, 241, 0.4);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: white;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .btn-outline:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    /* Hero Section */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 8rem 2rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 800px;
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 2rem;
+    }
+
+    .hero-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--primary);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+      max-width: 900px;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #fff 0%, #a5b4fc 50%, #818cf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      font-size: 1.25rem;
+      color: var(--gray);
+      max-width: 600px;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    /* Story Section */
+    .story {
+      padding: 6rem 2rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .story-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    @media (max-width: 768px) {
+      .story-grid { grid-template-columns: 1fr; }
+    }
+
+    .story-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 1.5rem;
+      padding: 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .story-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+    }
+
+    .story-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .story-icon.electricity {
+      background: rgba(250, 204, 21, 0.1);
+    }
+
+    .story-icon.ai {
+      background: rgba(99, 102, 241, 0.1);
+    }
+
+    .story h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .story p {
+      color: var(--gray);
+      font-size: 0.9375rem;
+    }
+
+    /* Features Section */
+    .features {
+      padding: 6rem 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      text-align: center;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 800;
+      margin-bottom: 1rem;
+    }
+
+    .section-desc {
+      text-align: center;
+      color: var(--gray);
+      max-width: 600px;
+      margin: 0 auto 3rem;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .feature-card {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      transition: all 0.3s;
+    }
+
+    .feature-card:hover {
+      background: rgba(255,255,255,0.04);
+      transform: translateY(-4px);
+      border-color: rgba(99, 102, 241, 0.3);
+    }
+
+    .feature-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+    }
+
+    .feature-card h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .feature-card p {
+      font-size: 0.875rem;
+      color: var(--gray);
+    }
+
+    /* Flow Section */
+    .flow {
+      padding: 6rem 2rem;
+      background: linear-gradient(180deg, transparent, rgba(99, 102, 241, 0.03), transparent);
+    }
+
+    .flow-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .flow-diagram {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 3rem;
+    }
+
+    .flow-node {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 1rem;
+      padding: 1.5rem 2rem;
+      text-align: center;
+      min-width: 160px;
+    }
+
+    .flow-node.highlight {
+      background: rgba(99, 102, 241, 0.1);
+      border-color: rgba(99, 102, 241, 0.4);
+    }
+
+    .flow-node-icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .flow-node h5 {
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .flow-node p {
+      font-size: 0.75rem;
+      color: var(--gray);
+    }
+
+    .flow-arrow {
+      font-size: 1.5rem;
+      color: var(--gray);
+    }
+
+    /* Pricing Section */
+    .pricing {
+      padding: 6rem 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .pricing-card {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      border-radius: 1.5rem;
+      padding: 3rem;
+      text-align: center;
+    }
+
+    .pricing-card h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .pricing-card p {
+      color: var(--gray);
+      margin-bottom: 2rem;
+    }
+
+    .pricing-features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+      text-align: left;
+    }
+
+    .pricing-feature {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.875rem;
+    }
+
+    .pricing-feature::before {
+      content: '✓';
+      width: 20px;
+      height: 20px;
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--success);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    /* CTA Section */
+    .cta {
+      padding: 6rem 2rem;
+      text-align: center;
+    }
+
+    .cta h2 {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 800;
+      margin-bottom: 1rem;
+    }
+
+    .cta p {
+      color: var(--gray);
+      margin-bottom: 2rem;
+    }
+
+    /* Footer */
+    footer {
+      padding: 3rem 2rem;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      text-align: center;
+      color: var(--gray);
+      font-size: 0.875rem;
+    }
+
+    /* Animations */
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .float {
+      animation: float 3s ease-in-out infinite;
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .hero-cta { flex-direction: column; }
+      .flow-diagram { flex-direction: column; }
+      .flow-arrow { transform: rotate(90deg); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav>
+    <div class="logo">TokenRouter</div>
+    <ul class="nav-links">
+      <li><a href="#story">故事</a></li>
+      <li><a href="#features">功能</a></li>
+      <li><a href="#pricing">定价</a></li>
+    </ul>
+    <a href="/admin.html" class="btn btn-outline">管理后台</a>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-badge">Enterprise AI Infrastructure</div>
+    <h1>
+      AI Token:<br>
+      <span class="gradient-text">The New Currency</span>
+    </h1>
+    <p>企业级 AI 计算的新计量单位。合规、隐私、路由、计费——让 AI 变得像用电一样简单。</p>
+    <div class="hero-cta">
+      <a href="#story" class="btn btn-primary">了解更多</a>
+      <a href="/admin.html" class="btn btn-outline">开始使用</a>
+    </div>
+  </section>
+
+  <!-- Story Section -->
+  <section class="story" id="story">
+    <div class="story-grid">
+      <div class="story-card">
+        <div class="story-icon electricity">⚡</div>
+        <h3>当电能变成商品</h3>
+        <p>电刚发明时，企业要自己建发电厂。后来，电力变成商品，你插上插座，按度数付费。电力的普及，彻底改变了企业的运营方式——从"自己发电"到"按需购买"。</p>
+      </div>
+      <div class="story-card">
+        <div class="story-icon ai">🤖</div>
+        <h3>当 AI Token 变成商品</h3>
+        <p>AI 时代一样——曾经，你要在本地部署模型、处理合规、自己开发。现在，AI Token 变成商品。TokenRouter 就是你的 AI 电力公司。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features" id="features">
+    <div class="section-label">Core Value</div>
+    <h2 class="section-title">为什么选择 TokenRouter?</h2>
+    <p class="section-desc">一站式解决 AI 落地的所有挑战——从合规到隐私，从路由到计费。</p>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-icon" style="background: rgba(239, 68, 68, 0.1);">🛡️</div>
+        <h4>合规 (EU AI Act)</h4>
+        <p>内置 EU AI Act 合规检查，确保您的 AI 应用符合欧盟法规要求。</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background: rgba(99, 102, 241, 0.1);">🔒</div>
+        <h4>隐私 (Privacy)</h4>
+        <p>数据不出本地。敏感信息在本地脱敏，LLM 只处理已脱敏数据。</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background: rgba(14, 165, 233, 0.1);">🧭</div>
+        <h4>路由 (Routing)</h4>
+        <p>多模型智能选择。支持 DeepSeek、OpenAI、Anthropic、SiliconFlow。</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background: rgba(16, 185, 129, 0.1);">💰</div>
+        <h4>计费 (Metering)</h4>
+        <p>精确计量。按 Token 计费，企业级定价，透明可控。</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background: rgba(245, 158, 11, 0.1);">📊</div>
+        <h4>分析 (Analytics)</h4>
+        <p>完整的隐私报告。追踪敏感数据检测、计算统计、使用趋势。</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background: rgba(139, 92, 246, 0.1);">⚡</div>
+        <h4>本地计算</h4>
+        <p>本地预处理 + LLM 汇总。成本降低 99%，隐私风险趋近于零。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Flow Section -->
+  <section class="flow">
+    <div class="flow-container">
+      <div class="section-label">How It Works</div>
+      <h2 class="section-title">工作原理</h2>
+
+      <div class="flow-diagram">
+        <div class="flow-node">
+          <div class="flow-node-icon">📦</div>
+          <h5>原始数据</h5>
+          <p>企业本地数据</p>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node highlight">
+          <div class="flow-node-icon float">⚡</div>
+          <h5>TokenRouter</h5>
+          <p>本地计算 + 脱敏</p>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node">
+          <div class="flow-node-icon">🤖</div>
+          <h5>Safe AI</h5>
+          <p>脱敏后数据</p>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node">
+          <div class="flow-node-icon">✅</div>
+          <h5>结果</h5>
+          <p>聚合 + 报告</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Section -->
+  <section class="pricing" id="pricing">
+    <div class="section-label">Token Model</div>
+    <h2 class="section-title">像用电一样，按需付费</h2>
+
+    <div class="pricing-card">
+      <h3>AI Token as Commodity</h3>
+      <p>电力按"度数"计费，AI Token 按 Token 计费。</p>
+
+      <div class="pricing-features">
+        <div class="pricing-feature">精确计量 — 每一 Token 都记录</div>
+        <div class="pricing-feature">多模型 — 按需路由，最优性价比</div>
+        <div class="pricing-feature">隐私优先 — 数据本地处理</div>
+        <div class="pricing-feature">企业级 SLA — 99.9% 可用性</div>
+        <div class="pricing-feature">按量计费 — 无最低消费</div>
+        <div class="pricing-feature">透明定价 — 无隐藏费用</div>
+      </div>
+
+      <a href="/admin.html" class="btn btn-primary">申请试用</a>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta">
+    <h2>准备好使用 AI 电力了吗?</h2>
+    <p>从"自己发电"到"插上插座"，让 TokenRouter 为你供电。</p>
+    <div class="hero-cta">
+      <a href="/admin.html" class="btn btn-primary">开始使用</a>
+      <a href="#features" class="btn btn-outline">了解更多</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>TokenRouter — AI Token as Commodity</p>
+  </footer>
+
+  <script>
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+
+    // Parallax effect on hero
+    window.addEventListener('scroll', () => {
+      const hero = document.querySelector('.hero');
+      const scrolled = window.pageYOffset;
+      if (hero && scrolled < window.innerHeight) {
+        hero.style.transform = `translateY(${scrolled * 0.3}px)`;
+      }
+    });
+  </script>
+</body>
+</html>

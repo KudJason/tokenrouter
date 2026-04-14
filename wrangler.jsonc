@@ -1,0 +1,72 @@
+{
+  "name": "tokenrouter-mvp",
+  "main": "src/api.ts",
+  "compatibility_date": "2026-04-09",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": { "directory": "./dist" },
+
+  // Routes - Custom Domain
+  "routes": [
+    {
+      "pattern": "token.route.worthwolf.top",
+      "zone_name": "worthwolf.top"
+    }
+  ],
+
+  // D1 Database
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "tokenrouter",
+      "database_id": "b9a9714c-bdb3-4bbb-9644-2155bac03ba4"
+    }
+  ],
+
+  // R2 Buckets
+  "r2_buckets": [
+    {
+      "binding": "ONTOLOGY_BUCKET",
+      "bucket_name": "enterprise-ontologies"
+    },
+    {
+      "binding": "ARCHIVE_BUCKET",
+      "bucket_name": "tokenrouter-archive"
+    }
+  ],
+
+  // KV Namespaces
+  "kv_namespaces": [
+    {
+      "binding": "GRAPH_CACHE",
+      "id": "d2921f30ea6e40e08ae70222b3488f6e"
+    },
+    {
+      "binding": "SESSIONS",
+      "id": "83ffa2aeb9654aaf86584195e71c8f49"
+    }
+  ],
+
+  // Workers AI
+  "ai": {
+    "binding": "AI"
+  },
+
+  // Environment variables
+  "vars": {
+    "VERSION": "0.1.0"
+  },
+
+  // Secrets (set via wrangler secret put)
+  // OPENAI_API_KEY
+  // ANTHROPIC_API_KEY
+  // GOOGLE_API_KEY
+  // DEEPSEEK_API_KEY
+  // SILICONFLOW_API_KEY
+  // ADMIN_SECRET - Required for admin dashboard
+
+  // Dev configuration
+  "dev": {
+    "port": 8787,
+    "local_protocol": "http"
+  }
+}

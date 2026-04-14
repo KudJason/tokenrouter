@@ -1,0 +1,41 @@
+{
+  "name": "tokenrouter-mvp",
+  "version": "0.1.0",
+  "description": "TokenRouter MVP - AI Compliance Middleware on Cloudflare Workers",
+  "type": "module",
+  "main": "src/api.ts",
+  "scripts": {
+    "dev": "wrangler dev",
+    "build:frontend": "cd frontend && npm run build",
+    "build": "npm run build:frontend",
+    "deploy": "npm run build && wrangler deploy",
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit",
+    "d1:migrate": "wrangler d1 migrations apply",
+    "d1:execute": "wrangler d1 execute",
+    "r2:ls": "wrangler r2 object list"
+  },
+  "dependencies": {
+    "@cloudflare/workers-types": "^4.20261127.0",
+    "hono": "^4.6.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "typescript": "^5.7.0",
+    "vitest": "^2.1.0",
+    "wrangler": "^4.0.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

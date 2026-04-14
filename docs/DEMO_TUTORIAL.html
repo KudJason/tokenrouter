@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TokenRouter - Getting Started Guide</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 0;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #1e293b;
+      line-height: 1.7;
+      font-size: 10pt;
+      background: white;
+    }
+
+    /* Cover Page */
+    .cover {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%);
+      color: white;
+      text-align: center;
+      padding: 60px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cover::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at 30% 70%, rgba(14, 165, 233, 0.15) 0%, transparent 50%),
+                  radial-gradient(circle at 70% 30%, rgba(239, 68, 68, 0.1) 0%, transparent 50%);
+      animation: float 20s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      50% { transform: translate(-2%, 2%) rotate(1deg); }
+    }
+    .cover-content {
+      position: relative;
+      z-index: 1;
+    }
+    .cover-logo {
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(135deg, #0EA5E9 0%, #EF4444 100%);
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36pt;
+      font-weight: 800;
+      margin-bottom: 30px;
+      box-shadow: 0 20px 60px rgba(14, 165, 233, 0.3);
+    }
+    .cover h1 {
+      font-size: 42pt;
+      font-weight: 800;
+      margin-bottom: 16px;
+      letter-spacing: -1px;
+    }
+    .cover h2 {
+      font-size: 16pt;
+      font-weight: 400;
+      color: #94a3b8;
+      margin-bottom: 40px;
+    }
+    .cover-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      padding: 12px 28px;
+      border-radius: 50px;
+      font-size: 12pt;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+    .cover-info {
+      font-size: 10pt;
+      color: #64748b;
+      margin-top: 40px;
+    }
+    .cover-info a {
+      color: #0EA5E9;
+      text-decoration: none;
+    }
+
+    /* Content Pages */
+    .page {
+      padding: 50px 60px;
+      min-height: 100vh;
+    }
+    .page-header {
+      margin-bottom: 40px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #e2e8f0;
+    }
+    .page-header h1 {
+      font-size: 28pt;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 8px;
+    }
+    .page-header p {
+      font-size: 11pt;
+      color: #64748b;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 40px;
+    }
+    .section-title {
+      font-size: 14pt;
+      font-weight: 700;
+      color: #0EA5E9;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-title .icon {
+      width: 28px;
+      height: 28px;
+      background: linear-gradient(135deg, #0EA5E9 0%, #0284c7 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: white;
+    }
+
+    /* Code Block */
+    .code-block {
+      background: #0f172a;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 16px 0;
+      overflow-x: auto;
+    }
+    .code-block pre {
+      color: #e2e8f0;
+      font-family: 'SF Mono', 'Fira Code', Monaco, monospace;
+      font-size: 9pt;
+      line-height: 1.6;
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+    .code-block .comment { color: #64748b; }
+    .code-block .string { color: #a5f3fc; }
+    .code-block .keyword { color: #c084fc; }
+    .code-block .function { color: #67e8f9; }
+    .code-block .variable { color: #fde68a; }
+
+    /* Info Box */
+    .info-box {
+      background: linear-gradient(135deg, rgba(14, 165, 233, 0.1) 0%, rgba(14, 165, 233, 0.05) 100%);
+      border-left: 4px solid #0EA5E9;
+      border-radius: 0 12px 12px 0;
+      padding: 16px 20px;
+      margin: 16px 0;
+    }
+    .info-box.success {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+      border-left-color: #10b981;
+    }
+    .info-box.warning {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%);
+      border-left-color: #f59e0b;
+    }
+
+    /* Table */
+    .table-wrapper {
+      margin: 16px 0;
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 9pt;
+    }
+    th {
+      background: #f8fafc;
+      padding: 12px 16px;
+      text-align: left;
+      font-weight: 600;
+      color: #475569;
+      border-bottom: 2px solid #e2e8f0;
+    }
+    td {
+      padding: 12px 16px;
+      border-bottom: 1px solid #e2e8f0;
+      vertical-align: top;
+    }
+    tr:hover {
+      background: #fafafa;
+    }
+
+    /* Flow Diagram */
+    .flow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin: 24px 0;
+      flex-wrap: wrap;
+    }
+    .flow-step {
+      background: white;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 16px 20px;
+      text-align: center;
+      min-width: 140px;
+    }
+    .flow-step .step-num {
+      width: 24px;
+      height: 24px;
+      background: linear-gradient(135deg, #0EA5E9 0%, #0284c7 100%);
+      border-radius: 50%;
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 8px;
+    }
+    .flow-step .step-title {
+      font-weight: 600;
+      font-size: 10pt;
+      color: #1e293b;
+    }
+    .flow-step .step-desc {
+      font-size: 8pt;
+      color: #64748b;
+      margin-top: 4px;
+    }
+    .flow-arrow {
+      color: #0EA5E9;
+      font-size: 20px;
+    }
+
+    /* API Card */
+    .api-card {
+      background: white;
+      border: 2px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 24px;
+      margin: 16px 0;
+    }
+    .api-card .method {
+      display: inline-block;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 700;
+      margin-right: 12px;
+    }
+    .api-card .endpoint {
+      font-family: monospace;
+      font-size: 11pt;
+      color: #1e293b;
+      font-weight: 600;
+    }
+
+    /* Highlight */
+    .highlight {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    /* Footer */
+    .footer {
+      background: #0f172a;
+      color: white;
+      padding: 40px 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 30px;
+    }
+    .footer-brand {
+      flex: 1;
+      min-width: 200px;
+    }
+    .footer-brand .logo {
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, #0EA5E9 0%, #EF4444 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18pt;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+    .footer-brand h3 {
+      font-size: 14pt;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .footer-brand p {
+      font-size: 9pt;
+      color: #94a3b8;
+    }
+    .footer-links {
+      display: flex;
+      gap: 40px;
+    }
+    .footer-links .col h4 {
+      font-size: 10pt;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #94a3b8;
+    }
+    .footer-links .col a {
+      display: block;
+      color: #e2e8f0;
+      text-decoration: none;
+      font-size: 9pt;
+      margin-bottom: 8px;
+    }
+    .footer-links .col a:hover {
+      color: #0EA5E9;
+    }
+
+    /* Page Numbers */
+    .page-break {
+      page-break-after: always;
+    }
+
+    /* Two Column */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin: 16px 0;
+    }
+
+    @media print {
+      .cover {
+        min-height: 100vh;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .page {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Cover Page -->
+<div class="cover">
+  <div class="cover-content">
+    <div class="cover-logo">TR</div>
+    <h1>TokenRouter</h1>
+    <h2>Trusted AI Agent Infrastructure</h2>
+    <div class="cover-badge">🚀 Getting Started Guide</div>
+    <p style="color: #e2e8f0; font-size: 11pt; max-width: 500px; margin: 0 auto;">
+      Build secure, compliant, and cost-efficient AI applications for enterprise automation
+    </p>
+    <div class="cover-info">
+      <p>API Endpoint: <strong>token.route.worthwolf.top</strong></p>
+      <p style="margin-top: 8px;">Questions? <a href="mailto:jason.jia@thirdhour.eu">jason.jia@thirdhour.eu</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- Page 2: Quick Start -->
+<div class="page page-break">
+  <div class="page-header">
+    <h1>Quick Start</h1>
+    <p>Get up and running with TokenRouter in under 5 minutes</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">
+      <div class="icon">1</div>
+      Get Your API Key
+    </div>
+    <div class="info-box">
+      <strong>Contact us</strong> at <a href="mailto:jason.jia@thirdhour.eu">jason.jia@thirdhour.eu</a> to receive your demo API key with <span class="highlight">100,000 free tokens</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">
+      <div class="icon">2</div>
+      Make Your First Request
+    </div>
+    <div class="code-block">
+      <pre>curl -X POST https://token.route.worthwolf.top/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{
+    "messages": [{"role": "user", "content": "Hello!"}],
+    "provider": "deepseek"
+  }'</pre>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">
+      <div class="icon">3</div>
+      You're Ready!
+    </div>
+    <div class="info-box success">
+      Your API key is now active. Start building with our AI routing, PII masking, and privacy compute features.
+    </div>
+  </div>
+</div>
+
+<!-- Page 3: How It Works -->
+<div class="page page-break">
+  <div class="page-header">
+    <h1>How It Works</h1>
+    <p>Three simple steps to privacy-first AI processing</p>
+  </div>
+
+  <div class="flow">
+    <div class="flow-step">
+      <div class="step-num">1</div>
+      <div class="step-title">Your Data</div>
+      <div class="step-desc">Send requests with sensitive data</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <div class="step-num">2</div>
+      <div class="step-title">PII Masking</div>
+      <div class="step-desc">Automatic detection & protection</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <div class="step-num">3</div>
+      <div class="step-title">AI Processing</div>
+      <div class="step-desc">Secure computation & responses</div>
+    </div>
+  </div>
+
+  <div class="section" style="margin-top: 40px;">
+    <div class="section-title">
+      <div class="icon">🔒</div>
+      Privacy-First Architecture
+    </div>
+    <div class="two-col">
+      <div class="api-card">
+        <strong>Input Masking</strong>
+        <p style="color: #64748b; margin-top: 8px; font-size: 9pt;">
+          Personally Identifiable Information (PII) is automatically detected and masked before any AI processing occurs.
+        </p>
+      </div>
+      <div class="api-card">
+        <strong>Local Computation</strong>
+        <p style="color: #64748b; margin-top: 8px; font-size: 9pt;">
+          Statistical operations run locally with zero cost. Your raw data never leaves our secure environment.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">
+      <div class="icon">🌐</div>
+      Multi-Provider Routing
+    </div>
+    <div class="info-box">
+      TokenRouter automatically routes your requests to the optimal AI provider based on cost, availability, and performance. Fallback mechanisms ensure reliability.
+    </div>
+  </div>
+</div>
+
+<!-- Page 4: API Reference -->
+<div class="page page-break">
+  <div class="page-header">
+    <h1>API Reference</h1>
+    <p>Base URL: https://token.route.worthwolf.top</p>
+  </div>
+
+  <div class="section">
+    <div class="api-card">
+      <span class="method">POST</span>
+      <span class="endpoint">/v1/chat/completions</span>
+    </div>
+    <p style="margin: 12px 0; color: #475569; font-size: 9pt;">
+      Send messages to AI models with automatic provider routing.
+    </p>
+    <div class="code-block">
+      <pre>{
+  "messages": [
+    {"role": "user", "content": "What is machine learning?"}
+  ],
+  "provider": "deepseek",    <span class="comment">// optional</span>
+  "model": "deepseek-chat",  <span class="comment">// optional</span>
+  "temperature": 0.7
+}</pre>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="api-card">
+      <span class="method">POST</span>
+      <span class="endpoint">/v1/mask</span>
+    </div>
+    <p style="margin: 12px 0; color: #475569; font-size: 9pt;">
+      Automatically detect and mask Personally Identifiable Information.
+    </p>
+    <div class="code-block">
+      <pre>{
+  "text": "Contact Zhang Wei at 13812345678 or zhang@example.com"
+}
+<span class="comment">// Response:</span>
+{
+  "success": true,
+  "masked": "Contact Zhang Wei at [手机号] or [邮箱]",
+  "detected": [
+    {"type": "PHONE_CN", "value": "13812345678"},
+    {"type": "EMAIL", "value": "zhang@example.com"}
+  ]
+}</pre>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="api-card">
+      <span class="method">POST</span>
+      <span class="endpoint">/v1/privacy/compute</span>
+    </div>
+    <p style="margin: 12px 0; color: #475569; font-size: 9pt;">
+      Perform local computations on sensitive data — <strong>FREE</strong>
+    </p>
+    <div class="code-block">
+      <pre>{
+  "task": "Calculate sales statistics",
+  "data": {"sales": [{"amount": 5999}, {"amount": 2999}]},
+  "operations": ["count", "sum", "average"]
+}
+<span class="comment">// Response:</span>
+{
+  "success": true,
+  "computed": {"count": 2, "sum": 8998, "average": 4499},
+  "cost_usd": 0
+}</pre>
+    </div>
+  </div>
+</div>
+
+<!-- Page 5: PII Types & Pricing -->
+<div class="page page-break">
+  <div class="page-header">
+    <h1>PII Detection Types</h1>
+    <p>Supported detection types for privacy protection</p>
+  </div>
+
+  <div class="section">
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Description</th>
+            <th>Example</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>PHONE_CN</code></td>
+            <td>Chinese phone number</td>
+            <td>13812345678</td>
+          </tr>
+          <tr>
+            <td><code>EMAIL</code></td>
+            <td>Email address</td>
+            <td>user@example.com</td>
+          </tr>
+          <tr>
+            <td><code>ID_CARD_CN</code></td>
+            <td>Chinese ID card</td>
+            <td>110101199001011234</td>
+          </tr>
+          <tr>
+            <td><code>BANK_CARD</code></td>
+            <td>Bank card number</td>
+            <td>6222021234567890</td>
+          </tr>
+          <tr>
+            <td><code>PERSON</code></td>
+            <td>Person name</td>
+            <td>张三</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section" style="margin-top: 40px;">
+    <div class="section-title">
+      <div class="icon">💰</div>
+      Pricing
+    </div>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Price</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>AI Chat (DeepSeek)</td>
+            <td><strong>$0.0001</strong> / 1K tokens</td>
+            <td>Most cost-effective</td>
+          </tr>
+          <tr>
+            <td>AI Chat (SiliconFlow)</td>
+            <td><strong>$0.001</strong> / 1K tokens</td>
+            <td>More provider options</td>
+          </tr>
+          <tr>
+            <td>PII Masking</td>
+            <td><span class="highlight">FREE</span></td>
+            <td>Always free</td>
+          </tr>
+          <tr>
+            <td>Privacy Compute</td>
+            <td><span class="highlight">FREE</span></td>
+            <td>Local computation</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="info-box success" style="margin-top: 20px;">
+      🎁 <strong>100,000 free tokens</strong> for all demo accounts!
+    </div>
+  </div>
+</div>
+
+<!-- Page 6: Code Examples -->
+<div class="page page-break">
+  <div class="page-header">
+    <h1>Code Examples</h1>
+    <p>Integrate TokenRouter into your applications</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">
+      <div class="icon">🐍</div>
+      Python
+    </div>
+    <div class="code-block">
+      <pre><span class="keyword">import</span> requests
+
+API_KEY = <span class="string">"YOUR_API_KEY"</span>
+BASE = <span class="string">"https://token.route.worthwolf.top"</span>
+
+headers = {<span class="string">"Authorization"</span>: <span class="string">f"Bearer {API_KEY}"</span>}
+
+<span class="comment"># Chat API</span>
+<span class="keyword">def</span> <span class="function">chat</span>(message):
+    <span class="keyword">return</span> requests.post(
+        <span class="string">f"{BASE}/v1/chat/completions"</span>,
+        headers=headers,
+        json={<span class="string">"messages"</span>: [{<span class="string">"role"</span>: <span class="string">"user"</span>, <span class="string">"content"</span>: message}]}
+    ).json()
+
+<span class="comment"># PII Masking</span>
+<span class="keyword">def</span> <span class="function">mask</span>(text):
+    <span class="keyword">return</span> requests.post(
+        <span class="string">f"{BASE}/v1/mask"</span>,
+        headers=headers,
+        json={<span class="string">"text"</span>: text}
+    ).json()
+
+<span class="comment"># Privacy Compute (FREE)</span>
+<span class="keyword">def</span> <span class="function">stats</span>(data):
+    <span class="keyword">return</span> requests.post(
+        <span class="string">f"{BASE}/v1/privacy/compute"</span>,
+        headers=headers,
+        json={<span class="string">"task"</span>: <span class="string">"Calculate"</span>, <span class="string">"data"</span>: data, <span class="string">"operations"</span>: [<span class="string">"sum"</span>, <span class="string">"average"</span>]}
+    ).json()</pre>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">
+      <div class="icon">📜</div>
+      OpenAI SDK Compatible
+    </div>
+    <div class="code-block">
+      <pre><span class="keyword">from</span> openai <span class="keyword">import</span> OpenAI
+
+client = OpenAI(
+    api_key=<span class="string">"YOUR_API_KEY"</span>,
+    base_url=<span class="string">"https://token.route.worthwolf.top/v1"</span>
+)
+
+<span class="comment"># Works with OpenAI SDK!</span>
+response = client.chat.completions.create(
+    model=<span class="string">"deepseek-chat"</span>,
+    messages=[{<span class="string">"role"</span>: <span class="string">"user"</span>, <span class="string">"content"</span>: <span class="string">"Hello!"</span>}]
+)</pre>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  <div class="footer-brand">
+    <div class="logo">TR</div>
+    <h3>TokenRouter</h3>
+    <p>Trusted AI Agent Infrastructure<br>for Enterprise Automation</p>
+  </div>
+  <div class="footer-links">
+    <div class="col">
+      <h4>Resources</h4>
+      <a href="https://token.route.worthwolf.top">Documentation</a>
+      <a href="https://token.route.worthwolf.top/admin">Dashboard</a>
+      <a href="mailto:jason.jia@thirdhour.eu">Support</a>
+    </div>
+    <div class="col">
+      <h4>Contact</h4>
+      <a href="mailto:jason.jia@thirdhour.eu">jason.jia@thirdhour.eu</a>
+      <a href="https://token.route.worthwolf.top">token.route.worthwolf.top</a>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,105 @@
+# TokenRouter Enterprise Ontology Sample
+# This is a sample TTL file demonstrating the enterprise sensitive information schema
+
+@prefix tr: <http://tokenrouter.ai/enterprise#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+# Supplier entities
+tr:Supplier_001 a tr:Supplier ;
+    tr:supplierName "Acme Corp"@en ;
+    tr:supplierContact "contact@acme.com" ;
+    tr:contractValue "€500,000" ;
+    tr:contractExpiry "2026-12-31" ;
+    tr:contractId "CTR-2024-001" .
+
+tr:Supplier_002 a tr:Supplier ;
+    tr:supplierName "TechCloud GmbH"@en ;
+    tr:supplierContact "info@techcloud.de" ;
+    tr:contractValue "€250,000" ;
+    tr:contractExpiry "2026-06-30" ;
+    tr:contractId "CTR-2025-008" .
+
+# Project entities
+tr:Project_001 a tr:Project ;
+    tr:projectName "Project Alpha"@en ;
+    tr:projectCode "ALPHA-2026" ;
+    tr:budget "€2,000,000" ;
+    tr:projectManager "John Smith" ;
+    tr:startDate "2026-01-01" ;
+    tr:endDate "2026-12-31" .
+
+tr:Project_002 a tr:Project ;
+    tr:projectName "Project Beta"@en ;
+    tr:projectCode "BETA-2026" ;
+    tr:budget "€1,500,000" ;
+    tr:projectManager "Maria Garcia" ;
+    tr:startDate "2026-03-01" ;
+    tr:endDate "2026-09-30" .
+
+# Service Providers
+tr:SP_001 a tr:ServiceProvider ;
+    tr:spName "Cloudflare"@en ;
+    tr:spService "Infrastructure" ;
+    tr:monthlyCost "€5,000" ;
+    tr:contractId "CSP-2024-001" .
+
+tr:SP_002 a tr:ServiceProvider ;
+    tr:spName "AWS"@en ;
+    tr:spService "Cloud Computing" ;
+    tr:monthlyCost "€15,000" ;
+    tr:contractId "CSP-2023-015" .
+
+tr:SP_003 a tr:ServiceProvider ;
+    tr:spName "Stripe"@en ;
+    tr:spService "Payment Processing" ;
+    tr:monthlyCost "€2,500" ;
+    tr:contractId "CSP-2025-003" .
+
+# Budget entities
+tr:Budget_001 a tr:Budget ;
+    tr:budgetAmount "€2,000,000" ;
+    tr:budgetYear "2026" ;
+    tr:costCenter "CC-1000" .
+
+tr:Budget_002 a tr:Budget ;
+    tr:budgetAmount "€500,000" ;
+    tr:budgetYear "2026" ;
+    tr:costCenter "CC-2000" .
+
+# Contract entities
+tr:Contract_001 a tr:Contract ;
+    tr:contractId "CTR-2024-001" ;
+    tr:contractValue "€500,000" ;
+    tr:contractParty "Acme Corp" ;
+    tr:contractType "Master Service Agreement" .
+
+# Relationships
+tr:Project_001 tr:hasSupplier tr:Supplier_001 .
+tr:Project_001 tr:hasBudget tr:Budget_001 .
+tr:Project_001 tr:hasServiceProvider tr:SP_001 .
+tr:Project_001 tr:hasServiceProvider tr:SP_003 .
+
+tr:Project_002 tr:hasSupplier tr:Supplier_002 .
+tr:Project_002 tr:hasBudget tr:Budget_002 .
+tr:Project_002 tr:hasServiceProvider tr:SP_002 .
+
+# Internal persons (project managers, etc.)
+tr:Person_001 a tr:InternalPerson ;
+    tr:personName "John Smith"@en ;
+    tr:personRole "Project Manager" ;
+    tr:personEmail "john.smith@company.com" .
+
+tr:Person_002 a tr:InternalPerson ;
+    tr:personName "Maria Garcia"@en ;
+    tr:personRole "Project Manager" ;
+    tr:personEmail "maria.garcia@company.com" .
+
+tr:Person_003 a tr:InternalPerson ;
+    tr:personName "Hans Mueller"@en ;
+    tr:personRole "CTO" ;
+    tr:personEmail "hans.mueller@company.com" .
+
+# Version info
+@version "1.0.0" .
+@generated "2026-04-09" .

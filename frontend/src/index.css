@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #0EA5E9;
+  --primary-dark: #0284C7;
+  --secondary: #EF4444;
+  --secondary-dark: #DC2626;
+  --background: #FFFFFF;
+  --text: #0F172A;
+  --text-light: #64748B;
+  --border: #E2E8F0;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--background);
+  color: var(--text);
+  line-height: 1.6;
+}
